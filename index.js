@@ -30,7 +30,27 @@ axios.get(url_cidade)
     Latitude: ${lat},
     Longitude: ${lon}`);
 
+    // segunda requisição coordenadas
+    const url_coordenadas = `${PROTOCOL}://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APP_ID}`
+
+    return axios.get(url_coordenadas);
 })
+.then(res =>{
+    //envio coordenadas
+    clima = res.data
+    // obtenção da sensação térmica e descrição 
+    const condicoes = {"descricao": clima.weather[0].description, "feels_like": clima.main.feels_like}
+    
+    // tratamento de dados: transformação de kelvin para celsius
+    const sensacao_celsius = (condicoes.feels_like - 273.15)
+    
+    // display no terminal
+    console.log(`Dados do clima de ${city}:
+        sensação térmica: ${sensacao_celsius.toFixed(2)},
+        descrição: ${condicoes.descricao}`)
+    
+})
+
 .catch(err => {
      console.error("Erro na requisição:", err);
 });
